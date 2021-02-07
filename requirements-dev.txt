@@ -1,0 +1,1 @@
+aiohttp-debugmode~=0.2.1
