@@ -20,8 +20,8 @@ class TbAdminRole(Model):
     id = fields.IntField(pk=True, source_field='F_ADMIN_ROLE_ID', description='AdminRole Id')
     name = fields.TextField(source_field='F_ADMIN_ROLE_NAME', description='AdminRole Name')
     desc = fields.TextField(source_field='F_ADMIN_ROLE_DESC', description='AdminRole Desc')
-    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESPAN', auto_now_add=True)
-    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESPAN', auto_now=True)
+    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
+    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
     menus: fields.ManyToManyRelation['TbAdminMenu']
 
@@ -39,8 +39,10 @@ class TbAdminMenu(Model):
     name = fields.TextField(source_field='F_ADMIN_MENU_NAME', description='AdminMenu Name')
     desc = fields.TextField(source_field='F_ADMIN_MENU_DESC', description='AdminMenu Desc')
     icon = fields.TextField(source_field='F_ADMIN_MENU_ICON', description='AdminMenu Icon')
-    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESPAN', auto_now_add=True)
-    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESPAN', auto_now=True)
+    model = fields.TextField(source_field='F_ADMIN_MENU_MODEL', description='AdminMenu Model')
+    action = fields.TextField(source_field='F_ADMIN_MENU_ACTION', description='AdminMenu Action')
+    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
+    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
     menu_id = fields.ManyToManyField(
         'models.TbAdminRole', through='T_ADMIN_ROLE_MENU_RL', forward_key='F_ADMIN_ROLE_ID', related_name='menus')
