@@ -75,7 +75,7 @@
                     {% for second in first.childes %}
                     <li>
                         {% if not second.childes %}
-                        <a onclick="xadmin.add_tab('{{ second.name }}','{{ second.model }}')">
+                        <a onclick="xadmin.add_tab('{{ second.name }}','{{ second.link }}')">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>{{ second.name }}</cite>
                         </a>
@@ -88,7 +88,7 @@
                         <ul class="sub-menu">
                             {% for third in second.childes %}
                             <li>
-                                <a onclick="xadmin.add_tab('{{ third.name }}','{{ third.model }}')">
+                                <a onclick="xadmin.add_tab('{{ third.name }}','{{ third.link }}')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>{{ third.name }}</cite>
                                 </a>

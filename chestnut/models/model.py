@@ -38,12 +38,13 @@ class TbAdminRole(Model):
 class TbAdminRight(Model):
     id = fields.IntField(pk=True, source_field='F_ADMIN_RIGHT_ID', description='AdminRight Id')
     parent_id = fields.IntField(source_field='F_ADMIN_RIGHT_PARENT_ID', description='AdminRight Parent Id')
-    name = fields.TextField(source_field='F_ADMIN_RIGHT_NAME', description='AdminRight Name')
-    desc = fields.TextField(source_field='F_ADMIN_RIGHT_DESC', description='AdminRight Desc')
-    icon = fields.TextField(source_field='F_ADMIN_RIGHT_ICON', description='AdminRight Icon')
+    is_menu = fields.IntEnumField(RightIsMenu, source_field='F_ADMIN_RIGHT_IS_MENU', description='AdminRight is Menu')
+    group = fields.TextField(source_field='F_ADMIN_RIGHT_GROUP', description='AdminRight Group')
     model = fields.TextField(source_field='F_ADMIN_RIGHT_MODEL', description='AdminRight Model')
     action = fields.TextField(source_field='F_ADMIN_RIGHT_ACTION', description='AdminRight Action')
-    is_menu = fields.IntEnumField(RightIsMenu, source_field='F_ADMIN_RIGHT_IS_MENU', description='AdminRight is Menu')
+    icon = fields.TextField(source_field='F_ADMIN_RIGHT_ICON', description='AdminRight Icon')
+    name = fields.TextField(source_field='F_ADMIN_RIGHT_NAME', description='AdminRight Name')
+    desc = fields.TextField(source_field='F_ADMIN_RIGHT_DESC', description='AdminRight Desc')
     create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
     update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 

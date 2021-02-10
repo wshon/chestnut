@@ -25,5 +25,5 @@ async def right_check(request, handler):
     if not url.startWith('/admin'):
         return await handler(request)
     session = await get_session(request)
-    right = await AdminRight().get_right()
+    right = await AdminRight.get_right()
     pass
