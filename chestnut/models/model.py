@@ -18,6 +18,19 @@ from tortoise import Model, fields
 from models.enums import RightIsMenu
 
 
+class TbAdmin(Model):
+    id = fields.IntField(pk=True, source_field='F_ADMIN_ID', description='SysAdminMod Id')
+    name = fields.TextField(source_field='F_ADMIN_Name', description='SysAdminMod Name')
+    role = fields.ForeignKeyField(model_name='models.TbAdminRole', related_name='admins', on_delete=fields.RESTRICT)
+
+    class Meta:
+        table = "T_ADMIN"
+        table_description = "This table for admin"
+
+    def __str__(self):
+        return f"SysAdminMod {self.id}: {self.name}"
+
+
 class TbAdminRole(Model):
     id = fields.IntField(pk=True, source_field='F_ADMIN_ROLE_ID', description='AdminRole Id')
     name = fields.TextField(source_field='F_ADMIN_ROLE_NAME', description='AdminRole Name')
@@ -25,6 +38,7 @@ class TbAdminRole(Model):
     create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
     update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
+    admins: fields.ReverseRelation['TbAdmin']
     rights: fields.ManyToManyRelation['TbAdminRight']
 
     class Meta:
@@ -48,8 +62,8 @@ class TbAdminRight(Model):
     create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
     update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
-    right_id = fields.ManyToManyField(
-        'models.TbAdminRole', through='T_ADMIN_ROLE_RIGHT_RL', forward_key='F_ADMIN_ROLE_ID', related_name='rights')
+    right_id = fields.ManyToManyField(model_name='models.TbAdminRole', through='T_ADMIN_ROLE_RIGHT_RL',
+                                      forward_key='F_ADMIN_ROLE_ID', related_name='rights')
 
     class Meta:
         table = "T_ADMIN_RIGHT"

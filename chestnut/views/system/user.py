@@ -2,25 +2,25 @@
 # encoding: utf-8
 
 """
-@Time    : 2021/2/10 10:25
+@Time    : 2021/2/7 17:30
 @Author  : Shon Wang
 @Email   : muumlover@live.com
 @Blog    : https://blog.wshon.com
 @Project : chestnut
-@FileName: adminer.py
+@FileName: user.py
 @Software: PyCharm
 @license : (C) Copyright 2021 by Shon Wang. All rights reserved.
-@Desc    :
-
+@Desc    : 
+    
 """
 import aiohttp_jinja2
 
 
-@aiohttp_jinja2.template('admin/adminer/index.html')
+@aiohttp_jinja2.template('system/user/index.html')
 async def index(request):
     return None
 
 
-@aiohttp_jinja2.template('admin/adminer/new.html')
+@aiohttp_jinja2.template('system/user/new.html')
 async def new(request):
     return None

@@ -15,11 +15,11 @@
 """
 import aiohttp_jinja2
 
-from models.menu import AdminMenu
+from models.menu import SysMenuMod
 
 
-@aiohttp_jinja2.template('admin/index/index.html')
+@aiohttp_jinja2.template('system/index/index.html')
 async def index(request):
     data = dict()
-    data['menus'] = await AdminMenu.get_admin_menu(1)
+    data['menus'] = await SysMenuMod.get_system_menu(1)
     return data
