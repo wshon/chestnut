@@ -19,22 +19,30 @@ from models.enums import RightIsMenu
 
 
 class TbAdmin(Model):
-    id = fields.IntField(pk=True, source_field='F_ADMIN_ID', description='SysAdminMod Id')
-    name = fields.TextField(source_field='F_ADMIN_Name', description='SysAdminMod Name')
-    role = fields.ForeignKeyField(model_name='models.TbAdminRole', related_name='admins', on_delete=fields.RESTRICT)
+    id = fields.IntField(pk=True, source_field='F_ADMIN_ID', description='SysAdminMod id')
+    username = fields.TextField(source_field='F_ADMIN_USERNAME', description='SysAdminMod username')
+    password = fields.TextField(source_field='F_ADMIN_PASSWORD', description='SysAdminMod password')
+    first_name = fields.TextField(source_field='F_ADMIN_FIRST_NAME', description='SysAdminMod first name')
+    last_name = fields.TextField(source_field='F_ADMIN_LAST_NAME', description='SysAdminMod last name')
+    last_login = fields.DatetimeField(source_field='F_LAST_LOGIN_TIME', description='SysAdminMod last login')
+    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
+    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
+
+    role = fields.ForeignKeyField(model_name='models.TbAdminRole', related_name='admins', on_delete=fields.RESTRICT,
+                                  source_field='F_ADMIN_ROLE_ID')
 
     class Meta:
         table = "T_ADMIN"
         table_description = "This table for admin"
 
     def __str__(self):
-        return f"SysAdminMod {self.id}: {self.name}"
+        return f"SysAdminMod {self.id}: {self.username}"
 
 
 class TbAdminRole(Model):
-    id = fields.IntField(pk=True, source_field='F_ADMIN_ROLE_ID', description='AdminRole Id')
-    name = fields.TextField(source_field='F_ADMIN_ROLE_NAME', description='AdminRole Name')
-    desc = fields.TextField(source_field='F_ADMIN_ROLE_DESC', description='AdminRole Desc')
+    id = fields.IntField(pk=True, source_field='F_ADMIN_ROLE_ID', description='AdminRole id')
+    name = fields.TextField(source_field='F_ADMIN_ROLE_NAME', description='AdminRole name')
+    desc = fields.TextField(source_field='F_ADMIN_ROLE_DESC', description='AdminRole desc')
     create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
     update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
@@ -50,20 +58,21 @@ class TbAdminRole(Model):
 
 
 class TbAdminRight(Model):
-    id = fields.IntField(pk=True, source_field='F_ADMIN_RIGHT_ID', description='AdminRight Id')
-    parent_id = fields.IntField(source_field='F_ADMIN_RIGHT_PARENT_ID', description='AdminRight Parent Id')
-    is_menu = fields.IntEnumField(RightIsMenu, source_field='F_ADMIN_RIGHT_IS_MENU', description='AdminRight is Menu')
-    group = fields.TextField(source_field='F_ADMIN_RIGHT_GROUP', description='AdminRight Group')
-    model = fields.TextField(source_field='F_ADMIN_RIGHT_MODEL', description='AdminRight Model')
-    action = fields.TextField(source_field='F_ADMIN_RIGHT_ACTION', description='AdminRight Action')
-    icon = fields.TextField(source_field='F_ADMIN_RIGHT_ICON', description='AdminRight Icon')
-    name = fields.TextField(source_field='F_ADMIN_RIGHT_NAME', description='AdminRight Name')
-    desc = fields.TextField(source_field='F_ADMIN_RIGHT_DESC', description='AdminRight Desc')
+    id = fields.IntField(pk=True, source_field='F_ADMIN_RIGHT_ID', description='AdminRight id')
+    parent_id = fields.IntField(source_field='F_ADMIN_RIGHT_PARENT_ID', description='AdminRight parent id')
+    is_menu = fields.IntEnumField(RightIsMenu, source_field='F_ADMIN_RIGHT_IS_MENU', description='AdminRight is menu')
+    group = fields.TextField(source_field='F_ADMIN_RIGHT_GROUP', description='AdminRight group')
+    model = fields.TextField(source_field='F_ADMIN_RIGHT_MODEL', description='AdminRight model')
+    action = fields.TextField(source_field='F_ADMIN_RIGHT_ACTION', description='AdminRight action')
+    icon = fields.TextField(source_field='F_ADMIN_RIGHT_ICON', description='AdminRight icon')
+    name = fields.TextField(source_field='F_ADMIN_RIGHT_NAME', description='AdminRight name')
+    desc = fields.TextField(source_field='F_ADMIN_RIGHT_DESC', description='AdminRight desc')
     create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
     update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
     right_id = fields.ManyToManyField(model_name='models.TbAdminRole', through='T_ADMIN_ROLE_RIGHT_RL',
-                                      forward_key='F_ADMIN_ROLE_ID', related_name='rights')
+                                      forward_key='F_ADMIN_ROLE_ID', backward_key='F_ADMIN_RIGHT_ID',
+                                      related_name='rights', on_delete=fields.RESTRICT)
 
     class Meta:
         table = "T_ADMIN_RIGHT"

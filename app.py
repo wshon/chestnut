@@ -16,11 +16,11 @@
 import base64
 
 import aiohttp_jinja2
-import fernet
 import jinja2
 from aiohttp import web
-from aiohttp_session import setup
+from aiohttp_session import setup as setup_session
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
+from cryptography.fernet import Fernet
 
 from chestnut.routers import setup_routes
 from database import setup_orm
@@ -28,10 +28,11 @@ from database import setup_orm
 
 def get_app():
     app = web.Application()
+
     # secret_key must be 32 url-safe base64-encoded bytes
-    fernet_key = fernet.Fernet.generate_key()
+    fernet_key = Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
-    setup(app, EncryptedCookieStorage(secret_key))
+    setup_session(app, EncryptedCookieStorage(secret_key))
 
     setup_routes(app)
     setup_orm(app)

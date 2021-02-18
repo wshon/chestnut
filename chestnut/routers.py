@@ -36,6 +36,7 @@ def setup_routes(app):
     # admin admin
     app.router.add_get('/system/admin/index.html', system_admin.index, name='system_admin.index')
     app.router.add_get('/system/admin/new.html', system_admin.new, name='system_admin.new')
+    app.router.add_view('/system/admin', system_admin.Admin, name='system_admin.admins')
     app.router.add_view('/system/admin/{id}', system_admin.Admin, name='system_admin.admin')
 
     # admin user
