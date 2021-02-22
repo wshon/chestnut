@@ -36,3 +36,14 @@ class SysAdminMod(object):
         admin_new = TbAdmin()
         await admin_new.update_from_dict(data)
         await admin_new.save()
+
+    @staticmethod
+    async def login_admin(username, passward):
+        admin = await TbAdmin.filter(username=username).first()
+        pass_db = bytes.fromhex(admin.password)
+        pass_salt = pass_db[:8]
+        pass_byte = hashlib.scrypt(passward.encode(), salt=pass_salt, n=2048, r=8, p=1, dklen=24)
+        if pass_byte != pass_db[8:]:
+            return False
+        # TODO 更新登陆时间
+        return True

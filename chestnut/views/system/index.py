@@ -23,3 +23,13 @@ async def index(request):
     data = dict()
     data['menus'] = await SysMenuMod.get_system_menu(1)
     return data
+
+
+@aiohttp_jinja2.template('system/index/login.html')
+async def login(request):
+    return None
+
+
+@aiohttp_jinja2.template('system/index/logout.html')
+async def logout(request):
+    return None

@@ -19,6 +19,7 @@ import aiohttp_cors
 
 from .views.system import (
     index as system_index,
+    auth as system_auth,
 
     admin as system_admin,
     role as system_role,
@@ -32,6 +33,10 @@ def setup_routes(app):
     # admin
     # admin index
     app.router.add_get('/system/index.html', system_index.index)
+    app.router.add_get('/system/login.html', system_index.login)
+    app.router.add_get('/system/logout.html', system_index.logout)
+
+    app.router.add_post('/system/login.html', system_auth.login)
 
     # admin admin
     app.router.add_get('/system/admin/index.html', system_admin.index, name='system_admin.index')

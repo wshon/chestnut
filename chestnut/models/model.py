@@ -19,14 +19,15 @@ from models.enums import RightIsMenu
 
 
 class TbAdmin(Model):
-    id = fields.IntField(pk=True, source_field='F_ADMIN_ID', description='SysAdminMod id')
+    id = fields.IntField(pk=True, source_field='F_ADMIN_ID', description='SysAdminMod id', generated=True)
     username = fields.TextField(source_field='F_ADMIN_USERNAME', description='SysAdminMod username')
     password = fields.TextField(source_field='F_ADMIN_PASSWORD', description='SysAdminMod password')
-    first_name = fields.TextField(source_field='F_ADMIN_FIRST_NAME', description='SysAdminMod first name')
-    last_name = fields.TextField(source_field='F_ADMIN_LAST_NAME', description='SysAdminMod last name')
-    last_login = fields.DatetimeField(source_field='F_LAST_LOGIN_TIME', description='SysAdminMod last login')
-    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
-    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
+    first_name = fields.TextField(source_field='F_ADMIN_FIRST_NAME', description='SysAdminMod first name', null=True)
+    last_name = fields.TextField(source_field='F_ADMIN_LAST_NAME', description='SysAdminMod last name', null=True)
+    last_login = fields.DatetimeField(source_field='F_LAST_LOGIN_TIME', description='SysAdminMod last login', null=True)
+
+    create_timestamp = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
+    update_timestamp = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
     role = fields.ForeignKeyField(model_name='models.TbAdminRole', related_name='admins', on_delete=fields.RESTRICT,
                                   source_field='F_ADMIN_ROLE_ID')
@@ -40,11 +41,12 @@ class TbAdmin(Model):
 
 
 class TbAdminRole(Model):
-    id = fields.IntField(pk=True, source_field='F_ADMIN_ROLE_ID', description='AdminRole id')
+    id = fields.IntField(pk=True, source_field='F_ADMIN_ROLE_ID', description='AdminRole id', generated=True)
     name = fields.TextField(source_field='F_ADMIN_ROLE_NAME', description='AdminRole name')
     desc = fields.TextField(source_field='F_ADMIN_ROLE_DESC', description='AdminRole desc')
-    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
-    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
+
+    create_timestamp = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
+    update_timestamp = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
     admins: fields.ReverseRelation['TbAdmin']
     rights: fields.ManyToManyRelation['TbAdminRight']
@@ -58,7 +60,7 @@ class TbAdminRole(Model):
 
 
 class TbAdminRight(Model):
-    id = fields.IntField(pk=True, source_field='F_ADMIN_RIGHT_ID', description='AdminRight id')
+    id = fields.IntField(pk=True, source_field='F_ADMIN_RIGHT_ID', description='AdminRight id', generated=True)
     parent_id = fields.IntField(source_field='F_ADMIN_RIGHT_PARENT_ID', description='AdminRight parent id')
     is_menu = fields.IntEnumField(RightIsMenu, source_field='F_ADMIN_RIGHT_IS_MENU', description='AdminRight is menu')
     group = fields.TextField(source_field='F_ADMIN_RIGHT_GROUP', description='AdminRight group')
@@ -67,8 +69,9 @@ class TbAdminRight(Model):
     icon = fields.TextField(source_field='F_ADMIN_RIGHT_ICON', description='AdminRight icon')
     name = fields.TextField(source_field='F_ADMIN_RIGHT_NAME', description='AdminRight name')
     desc = fields.TextField(source_field='F_ADMIN_RIGHT_DESC', description='AdminRight desc')
-    create_timespan = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
-    update_timespan = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
+
+    create_timestamp = fields.DatetimeField(source_field='F_CREATE_TIMESTAMP', auto_now_add=True)
+    update_timestamp = fields.DatetimeField(source_field='F_UPDATE_TIMESTAMP', auto_now=True)
 
     right_id = fields.ManyToManyField(model_name='models.TbAdminRole', through='T_ADMIN_ROLE_RIGHT_RL',
                                       forward_key='F_ADMIN_ROLE_ID', backward_key='F_ADMIN_RIGHT_ID',
