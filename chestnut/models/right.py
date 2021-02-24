@@ -14,10 +14,16 @@
     
 """
 
-from models.model import TbAdminRole
+from models.model import TbAdminRole, TbAdmin
 
 
 class AdminRight(object):
     @staticmethod
-    async def get_right(self):
-        return await TbAdminRole.filter().first()
+    async def get_right(admin_id, group, model, action):
+        admin: TbAdmin = await TbAdmin.filter(id=admin_id).first()
+        if admin is None:
+            return
+        role: TbAdminRole = await admin.role.first()
+        if role is None:
+            return
+        return await role.rights.filter(group=group, model=model, action=action)

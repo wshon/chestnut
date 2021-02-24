@@ -15,6 +15,9 @@
 """
 import json
 
+from aiohttp import web
+from aiohttp_session import get_session
+
 from models.admin import SysAdminMod
 
 
@@ -24,5 +27,17 @@ async def login(request):
         post_data = json.loads(str(await request.content.read(), encoding="utf-8"))
     elif request.content_type == 'application/x-www-form-urlencoded' or request.content_type == 'multipart/form-data':
         post_data = await request.post()
-    res = await SysAdminMod.login_admin(post_data['username'], post_data['password'])
+    admin_id = await SysAdminMod.login(post_data['username'], post_data['password'])
+    if admin_id:
+        session = await get_session(request)
+        session['admin_id'] = admin_id
+        session['is_login'] = True
+        raise web.HTTPSeeOther(request.app.router.get('system.index').url_for())
     return None
+
+
+async def logout(request):
+    session = await get_session(request)
+    if session['is_login']:
+        session['is_login'] = False
+    raise web.HTTPSeeOther(request.app.router.get('system.login').url_for())

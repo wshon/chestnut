@@ -27,7 +27,7 @@ from utils.result import OptError, OptSuccess
 @aiohttp_jinja2.template('system/admin/index.html')
 async def index(request):
     data = dict()
-    data['admins'] = await SysAdminMod.get_all_admin()
+    data['admins'] = await SysAdminMod.fetch_all()
     return data
 
 
@@ -58,7 +58,7 @@ class Admin(web.View, CorsViewMixin):
         if post_data.get('pass') != post_data.get('repass'):
             return OptError.PasswordNotSame()
 
-        await SysAdminMod.add_admin(post_data)
+        await SysAdminMod.create(post_data)
         return OptSuccess()
 
     async def select_admin(self, admin_id):

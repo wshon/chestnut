@@ -29,7 +29,3 @@ async def index(request):
 async def login(request):
     return None
 
-
-@aiohttp_jinja2.template('system/index/logout.html')
-async def logout(request):
-    return None

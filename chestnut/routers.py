@@ -32,11 +32,11 @@ PROJECT_ROOT = pathlib.Path(__file__).parent
 def setup_routes(app):
     # admin
     # admin index
-    app.router.add_get('/system/index.html', system_index.index)
-    app.router.add_get('/system/login.html', system_index.login)
-    app.router.add_get('/system/logout.html', system_index.logout)
+    app.router.add_get('/system/index.html', system_index.index, name='system.index')
+    app.router.add_get('/system/login.html', system_index.login, name='system.login')
 
     app.router.add_post('/system/login.html', system_auth.login)
+    app.router.add_get('/system/logout.html', system_auth.logout)
 
     # admin admin
     app.router.add_get('/system/admin/index.html', system_admin.index, name='system_admin.index')

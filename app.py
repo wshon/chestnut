@@ -18,12 +18,12 @@ import base64
 import aiohttp_jinja2
 import jinja2
 from aiohttp import web
-from aiohttp_session import setup as setup_session
-from aiohttp_session.cookie_storage import EncryptedCookieStorage
+from aiohttp_session import setup as setup_session, cookie_storage
 from cryptography.fernet import Fernet
 
 from chestnut.routers import setup_routes
 from database import setup_orm
+from middleware.right_check import right_check
 
 
 def get_app():
@@ -32,13 +32,15 @@ def get_app():
     # secret_key must be 32 url-safe base64-encoded bytes
     fernet_key = Fernet.generate_key()
     secret_key = base64.urlsafe_b64decode(fernet_key)
-    setup_session(app, EncryptedCookieStorage(secret_key))
-
+    setup_session(app, cookie_storage.EncryptedCookieStorage(secret_key))
     setup_routes(app)
     setup_orm(app)
 
     env = aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader('chestnut', 'templates'))
     env.filters['sysconfig'] = lambda _: ''
+
+    app.middlewares.append(right_check)
+
     return app
 
 

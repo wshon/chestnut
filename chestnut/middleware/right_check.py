@@ -18,12 +18,22 @@ from aiohttp_session import get_session
 
 from models.right import AdminRight
 
+allow_list = [
+    ('GET', '/system/login.html'),
+    ('POST', '/system/login.html'),
+]
+
 
 @web.middleware
 async def right_check(request, handler):
-    url = request.url.path
-    if not url.startWith('/admin'):
+    if not request.path.startswith('/system'):
+        return await handler(request)
+    if (request.method, request.path) in allow_list:
         return await handler(request)
     session = await get_session(request)
-    right = await AdminRight.get_right()
+    if not session.get('is_login', False):
+        raise web.HTTPSeeOther(request.app.router.get('system.login').url_for())
+    right = await AdminRight.get_right(session.get('admin_id', None), None, None, None)
+    if right is None:
+        return
     pass

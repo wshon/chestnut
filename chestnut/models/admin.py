@@ -15,20 +15,21 @@
 """
 import hashlib
 import os
+from datetime import datetime
 
 from models.model import TbAdmin
 
 
 class SysAdminMod(object):
     @staticmethod
-    async def get_all_admin():
+    async def fetch_all():
         admins = await TbAdmin.all()
         for admin in admins:
             admin.role = await admin.role.first()
         return admins
 
     @staticmethod
-    async def add_admin(data):
+    async def create(data):
         pass_salt = os.urandom(8)
         pass_byte = hashlib.scrypt(data['password'].encode(), salt=pass_salt, n=2048, r=8, p=1, dklen=24)
         pass_db = pass_byte + pass_salt
@@ -38,12 +39,13 @@ class SysAdminMod(object):
         await admin_new.save()
 
     @staticmethod
-    async def login_admin(username, passward):
+    async def login(username, passward):
         admin = await TbAdmin.filter(username=username).first()
         pass_db = bytes.fromhex(admin.password)
         pass_salt = pass_db[:8]
         pass_byte = hashlib.scrypt(passward.encode(), salt=pass_salt, n=2048, r=8, p=1, dklen=24)
         if pass_byte != pass_db[8:]:
             return False
-        # TODO 更新登陆时间
-        return True
+        admin.last_login = datetime.now()
+        await admin.save()
+        return admin.id
