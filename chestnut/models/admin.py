@@ -41,10 +41,12 @@ class SysAdminMod(object):
     @staticmethod
     async def login(username, passward):
         admin = await TbAdmin.filter(username=username).first()
+        if not admin:
+            return False
         pass_db = bytes.fromhex(admin.password)
-        pass_salt = pass_db[:8]
+        pass_salt = pass_db[-8:]
         pass_byte = hashlib.scrypt(passward.encode(), salt=pass_salt, n=2048, r=8, p=1, dklen=24)
-        if pass_byte != pass_db[8:]:
+        if pass_byte != pass_db[:-8]:
             return False
         admin.last_login = datetime.now()
         await admin.save()

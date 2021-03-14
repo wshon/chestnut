@@ -4,6 +4,7 @@
 
 {% block link %}
     <link href="{{ static('css/login.css') }}" rel="stylesheet">
+    <script charset="utf-8" src="{{ static('js/jquery.min.js') }}" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
@@ -32,6 +33,39 @@
                 //   });
                 //监听提交
                 form.on('submit(login)', function (data) {
+                    console.log(data);
+                    fetch('{{ url("login_post", app_="system") }}', {
+                        body: JSON.stringify(data.field), // must match "Content-Type" header
+                        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                        // cookies
+                        credentials: "same-origin", // include, same-origin, *omit
+                        headers: {
+                            // "user-agent": "Mozilla/4.0 MDN Example",
+                            "Content-Type": "application/json",
+                            // "Content-Type": "text/plain",
+                            // "Content-Type": "text/plain",
+                        },
+                        method: "POST", // *GET, POST, PUT, DELETE, etc.
+                        mode: "cors", // no-cors, cors, *same-origin
+                        redirect: "follow", // manual, *follow, error
+                        referrer: "no-referrer", // *client, no-referrer
+                    })
+                        .then(response => response.json()) // parses response to JSON
+                        .then(json => {
+                            // json
+                            console.log(`json =`, JSON.stringify(json, null, 4));
+                            //发异步，把数据提交给php
+                            layer.alert("登陆成功", {icon: 6}, function () {
+                                {#//关闭当前frame#}
+                                {#xadmin.close();#}
+                                {#// 可以对父窗口进行刷新#}
+                                {#xadmin.father_reload();#}
+                            });
+                        })
+                        .catch(err => console.error(`error =`, err));
+                    return false;
+
+
                     // alert(888)
                     layer.msg(JSON.stringify(data.field), function () {
                         location.href = 'index.html'

@@ -17,40 +17,17 @@ import pathlib
 
 import aiohttp_cors
 
-from .views.system import (
-    index as system_index,
-    auth as system_auth,
-
-    admin as system_admin,
-    role as system_role,
-    user as system_user,
-)
+from .apis.routers import apis
+from .views.routers import system
 
 PROJECT_ROOT = pathlib.Path(__file__).parent
 
 
 def setup_routes(app):
-    # admin
-    # admin index
-    app.router.add_get('/system/index.html', system_index.index, name='system.index')
-    app.router.add_get('/system/login.html', system_index.login, name='system.login')
-
-    app.router.add_post('/system/login.html', system_auth.login)
-    app.router.add_get('/system/logout.html', system_auth.logout)
-
-    # admin admin
-    app.router.add_get('/system/admin/index.html', system_admin.index, name='system_admin.index')
-    app.router.add_get('/system/admin/new.html', system_admin.new, name='system_admin.new')
-    app.router.add_view('/system/admin', system_admin.Admin, name='system_admin.admins')
-    app.router.add_view('/system/admin/{id}', system_admin.Admin, name='system_admin.admin')
-
-    # admin user
-    app.router.add_get('/system/role/index.html', system_role.index, name='system_role.index')
-    app.router.add_get('/system/role/new.html', system_role.new, name='system_role.new')
-
-    # admin user
-    app.router.add_get('/system/user/index.html', system_user.index, name='system_user.index')
-    app.router.add_get('/system/user/new.html', system_user.new, name='system_user.new')
+    app.add_subapp('/apis', apis)
+    app['apis'] = apis
+    app.add_subapp('/system', system)
+    app['system'] = system
 
     # Configure default CORS settings.
     cors = aiohttp_cors.setup(app, defaults={

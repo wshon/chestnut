@@ -26,4 +26,5 @@ class AdminRight(object):
         role: TbAdminRole = await admin.role.first()
         if role is None:
             return
-        return await role.rights.filter(group=group, model=model, action=action)
+        right = await role.rights.filter(group=group, model=model, action=action).first()
+        return right

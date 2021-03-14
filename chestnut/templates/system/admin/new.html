@@ -83,7 +83,7 @@
             //监听提交
             form.on('submit(add)', function (data) {
                 console.log(data);
-                fetch('{{ url("system_admin.admins") }}', {
+                fetch('{{ url("admin.admins") }}', {
                     body: JSON.stringify(data.field), // must match "Content-Type" header
                     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
                     // cookies

@@ -5,3 +5,4 @@ aiohttp-session~=2.9.0
 cryptography~=3.3.1
 Jinja2~=2.11.3
 tortoise-orm~=0.16.21
+webargs~=7.0.1

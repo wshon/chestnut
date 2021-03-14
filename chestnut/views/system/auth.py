@@ -13,31 +13,29 @@
 @Desc    : 
     
 """
-import json
 
 from aiohttp import web
 from aiohttp_session import get_session
+from webargs import fields
+from webargs.aiohttpparser import use_args
 
 from models.admin import SysAdminMod
+from utils.result import OptSuccess
 
 
-async def login(request):
-    post_data = dict()
-    if request.content_type == 'application/json':
-        post_data = json.loads(str(await request.content.read(), encoding="utf-8"))
-    elif request.content_type == 'application/x-www-form-urlencoded' or request.content_type == 'multipart/form-data':
-        post_data = await request.post()
-    admin_id = await SysAdminMod.login(post_data['username'], post_data['password'])
-    if admin_id:
-        session = await get_session(request)
-        session['admin_id'] = admin_id
-        session['is_login'] = True
-        raise web.HTTPSeeOther(request.app.router.get('system.index').url_for())
-    return None
+@use_args({"username": fields.Str(required=True), "password": fields.Str(required=True)}, location="json_or_form")
+async def login(request, args):
+    admin_id = await SysAdminMod.login(args['username'], args['password'])
+    if not admin_id:
+        raise web.HTTPSeeOther(request.app.router.get('login_fail').url_for())
+    session = await get_session(request)
+    session['admin_id'] = admin_id
+    session['is_login'] = True
+    return OptSuccess()
 
 
 async def logout(request):
     session = await get_session(request)
     if session['is_login']:
         session['is_login'] = False
-    raise web.HTTPSeeOther(request.app.router.get('system.login').url_for())
+    raise web.HTTPSeeOther(request.app['system'].router.get('login').url_for())
