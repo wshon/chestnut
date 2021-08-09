@@ -32,3 +32,7 @@ class OptError:
     class PasswordNotSame(OptSuccess):
         code = -1001
         text = '两次密码不一致'
+
+    class LoginFailed(OptSuccess):
+        code = -1002
+        text = '用户名不存在或密码错误'

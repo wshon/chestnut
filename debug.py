@@ -21,4 +21,4 @@ from aiohttp_debugmode import Debugmode
 from app import get_app
 
 _locale._getdefaultlocale = (lambda *args: ['en_US', 'utf8'])
-Debugmode.run_app(get_app())
+Debugmode.run_app(get_app(), port=8000)

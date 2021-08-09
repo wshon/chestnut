@@ -18,6 +18,7 @@ import os
 from datetime import datetime
 
 from models.model import TbAdmin
+from utils.exception import *
 
 
 class SysAdminMod(object):
@@ -39,13 +40,15 @@ class SysAdminMod(object):
         await admin_new.save()
 
     @staticmethod
-    async def login(username, passward):
+    async def login(username, password):
         admin = await TbAdmin.filter(username=username).first()
+        if admin is None:
+            raise UserNotFound()
         pass_db = bytes.fromhex(admin.password)
         pass_salt = pass_db[:8]
-        pass_byte = hashlib.scrypt(passward.encode(), salt=pass_salt, n=2048, r=8, p=1, dklen=24)
+        pass_byte = hashlib.scrypt(password.encode(), salt=pass_salt, n=2048, r=8, p=1, dklen=24)
         if pass_byte != pass_db[8:]:
-            return False
+            raise PasswordError()
         admin.last_login = datetime.now()
         await admin.save()
         return admin.id
